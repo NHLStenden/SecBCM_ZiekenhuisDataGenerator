@@ -9,10 +9,7 @@
 
     <ItemGroup>
       <PackageReference Include="Bogus" Version="34.0.2" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="database" />
+      <PackageReference Include="MySqlConnector" Version="2.2.5" />
     </ItemGroup>
 
 </Project>
