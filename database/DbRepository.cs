@@ -55,7 +55,7 @@ namespace ZiekenhuisDataGenerator.database
                     .RuleFor(p => p.voorgeschiedenis, f => f.PickRandom(voorgeschiedenis))
                     .RuleFor(p => p.geboortedatum,
                         f => f.Date.Between(
-                            new DateTime(1980, 1, 1), 
+                            new DateTime(1980, 1, 1),
                             new DateTime(2002, 1, 1)))
                 ;
             List<Patient> patienten = patientenFaker.Generate(10);
@@ -179,7 +179,7 @@ namespace ZiekenhuisDataGenerator.database
             List<Meetwaarde> waarden = new List<Meetwaarde>();
 
             DateTime startDate = new DateTime(2018, 1, 1);
-            
+
             string bloeddruk = patient.start_bloeddruk;
             int bloeddruk_hoog = int.Parse(bloeddruk.Split("/")[0]);
             int bloeddruk_laag = int.Parse(bloeddruk.Split("/")[1]);
@@ -189,28 +189,28 @@ namespace ZiekenhuisDataGenerator.database
             {
                 Meetwaarde meetwaarde = new Meetwaarde();
                 meetwaarde.Patient = patient;
-                
-                switch (rnd.Number(0,2))
+
+                switch (rnd.Number(0, 2))
                 {
                     case 0:
                         meetwaarde.Device = "Bloeddruk";
                         int deviation_low = rnd.Number(-10, 15);
                         int deviation_high = rnd.Number(-10, 15);
-                        meetwaarde.Waarde = (bloeddruk_hoog + deviation_high) + "/" + (bloeddruk_laag + deviation_low);
+                        meetwaarde.Waarde1 = (bloeddruk_hoog + deviation_high).ToString();
+                        meetwaarde.Waarde2 = (bloeddruk_laag + deviation_low).ToString();
                         break;
                     case 1:
                         meetwaarde.Device = "Weegschaal";
-                        meetwaarde.Waarde = (patient.start_gewicht + rnd.Number(-2, +3)).ToString();
+                        meetwaarde.Waarde1 = (patient.start_gewicht + rnd.Number(-2, +3)).ToString();
                         break;
                     case 2:
                         meetwaarde.Device = "Bloedsuiker";
-                        meetwaarde.Waarde = rnd.Number(3, 10).ToString();
+                        meetwaarde.Waarde1 = rnd.Number(3, 10).ToString();
                         break;
                 }
 
                 meetwaarde.Timestamp = startDate.AddDays(i + rnd.Number(0, 5));
                 waarden.Add(meetwaarde);
-
             }
 
             return waarden;
@@ -219,17 +219,33 @@ namespace ZiekenhuisDataGenerator.database
         public bool SaveOneMeetwaarde(Meetwaarde meetwaarde)
         {
             bool result = false;
-            string sql = @"INSERT INTO tbl_meetwaarden (m_fk_idPatient,m_timestamp,m_device,m_waarde) VALUES 
+            string sql =
+                @"INSERT INTO tbl_meetwaarden (
+                             m_fk_idPatient,
+                             m_timestamp,
+                             m_device,
+                             m_waarde1,
+                             m_waarde2,
+                             m_waarde3,
+                             m_waarde4
+                             ) VALUES 
                      (@fk_idPatient,
                       @timestamp,
                       @device,
-                      @value)";
+                      @value1,
+                      @value2,
+                      @value3,
+                      @value4
+                      )";
             using (MySqlCommand statement = MySQLDBContext.Instance.ConstructStatement(sql))
             {
                 statement.Parameters.AddWithValue("@fk_idPatient", meetwaarde.Patient.id);
                 statement.Parameters.AddWithValue("@timestamp", meetwaarde.Timestamp);
                 statement.Parameters.AddWithValue("@device", meetwaarde.Device);
-                statement.Parameters.AddWithValue("@value", meetwaarde.Waarde);
+                statement.Parameters.AddWithValue("@value1", meetwaarde.Waarde1);
+                statement.Parameters.AddWithValue("@value2", meetwaarde.Waarde2);
+                statement.Parameters.AddWithValue("@value3", meetwaarde.Waarde3);
+                statement.Parameters.AddWithValue("@value4", meetwaarde.Waarde4);
                 statement.Prepare();
                 result = statement.ExecuteNonQuery() == 1;
                 meetwaarde.id = statement.LastInsertedId;
@@ -237,7 +253,7 @@ namespace ZiekenhuisDataGenerator.database
 
             return result;
         }
- 
+
         public bool SaveMeetwaardenForPatient(Patient patient)
         {
             bool result = false;

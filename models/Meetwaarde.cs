@@ -7,7 +7,10 @@ namespace ZiekenhuisDataGenerator.models
         public long id;
         public Patient Patient;
         public string Device;
-        public string Waarde;
+        public string Waarde1;
+        public string? Waarde2;
+        public string? Waarde3;
+        public string? Waarde4;
         public DateTime Timestamp;
     }
 }

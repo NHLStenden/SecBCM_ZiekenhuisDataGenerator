@@ -77,7 +77,10 @@ CREATE TABLE tbl_meetwaarden
     m_fk_idPatient INT         NOT NULL,
     m_timestamp    DATETIME    NOT NULL,
     m_device       VARCHAR(20) NOT NULL,
-    m_waarde       VARCHAR(20) NULL,
+    m_waarde1      VARCHAR(20) NULL,
+    m_waarde2      VARCHAR(20) NULL,
+    m_waarde3      VARCHAR(20) NULL,
+    m_waarde4      VARCHAR(20) NULL,
     CONSTRAINT m_fk_idPatient FOREIGN KEY (m_fk_idPatient) REFERENCES tbl_patient (p_idPatient) ON DELETE CASCADE ON UPDATE CASCADE
 ) COMMENT 'Meetwaarden van diverse sensoren en apparatuur';
 
@@ -137,22 +140,25 @@ VALUES ('Zilveren Kruis Achmea'),
 ;
 
 CREATE OR REPLACE VIEW vw_patient_meetwaarden AS
-SELECT p.p_naam             as naam,
-       p.p_idPatient        as id,
-       p.p_adres_huisnr     as huisnr,
-       p.p_adres_straat     as straat,
-       p.p_adres_woonplaats as woonplaats,
-       p.p_geboortedatum    as geboortedatum,
-       p.p_start_bloeddruk  as start_bloeddruk,
-       p.p_start_gewicht    as start_gewicht,
-       p.p_contraindicaties as contraindicaties,
-       p.p_geslacht         as geslacht,
-       p.p_voorgeschiedenis as voorgeschiedenis,
-       m_device             as apparaat,
-       m_waarde             as meetwaarde,
-       m_timestamp          as datum_meetwaarde,
-       v_naam               as verzekeraar,
-       b_naam               as behandelaar
+SELECT patient.p_naam             as naam,
+       patient.p_idPatient        as id,
+       patient.p_adres_huisnr     as huisnr,
+       patient.p_adres_straat     as straat,
+       patient.p_adres_woonplaats as woonplaats,
+       patient.p_geboortedatum    as geboortedatum,
+       patient.p_start_bloeddruk  as start_bloeddruk,
+       patient.p_start_gewicht    as start_gewicht,
+       patient.p_contraindicaties as contraindicaties,
+       patient.p_geslacht         as geslacht,
+       patient.p_voorgeschiedenis as voorgeschiedenis,
+       m_device                   as apparaat,
+       m_waarde1                  as meetwaarde1,
+       m_waarde2                  as meetwaarde2,
+       m_waarde3                  as meetwaarde3,
+       m_waarde4                  as meetwaarde4,
+       m_timestamp                as datum_meetwaarde,
+       v_naam                     as verzekeraar,
+       b_naam                     as behandelaar
 FROM tbl_patient patient
          LEFT JOIN ref_dieetclassificatie rd on rd.o_iddieetclassificatie = patient.p_fk_idDieetclassificatie
          LEFT JOIN ref_leefstijl rl on rl.l_idLeefstijl = patient.p_fk_idLeefstijl
