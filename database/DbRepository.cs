@@ -29,7 +29,7 @@ namespace ZiekenhuisDataGenerator.database
             this.Verzekeraars = GetAllVerzekeraars();
         }
 
-        public List<Patient> CreateRandomPatienten()
+        public List<Patient> CreateRandomPatienten(int nrOfPatients)
         {
             List<string> geslacht = new List<string>(2);
             geslacht.Add("M");
@@ -58,7 +58,7 @@ namespace ZiekenhuisDataGenerator.database
                             new DateTime(1980, 1, 1),
                             new DateTime(2002, 1, 1)))
                 ;
-            List<Patient> patienten = patientenFaker.Generate(10);
+            List<Patient> patienten = patientenFaker.Generate(nrOfPatients);
 
             return patienten;
         }
@@ -174,7 +174,8 @@ namespace ZiekenhuisDataGenerator.database
             }
         }
 
-        public List<Meetwaarde> GenerateMeetwaardenForPatient(Patient patient)
+        public List<Meetwaarde> GenerateMeetwaardenForPatient(Patient patient, int nrOfMeasurementsPerPatientMin,
+            int nrOfMeasurementsPerPatientMax)
         {
             List<Meetwaarde> waarden = new List<Meetwaarde>();
 
@@ -184,7 +185,7 @@ namespace ZiekenhuisDataGenerator.database
             int bloeddruk_hoog = int.Parse(bloeddruk.Split("/")[0]);
             int bloeddruk_laag = int.Parse(bloeddruk.Split("/")[1]);
             Randomizer rnd = new Randomizer();
-            int nrOfMeetwaarden = rnd.Number(50, 200);
+            int nrOfMeetwaarden = rnd.Number(nrOfMeasurementsPerPatientMin, nrOfMeasurementsPerPatientMax);
             for (int i = 0; i < nrOfMeetwaarden; i++)
             {
                 Meetwaarde meetwaarde = new Meetwaarde();

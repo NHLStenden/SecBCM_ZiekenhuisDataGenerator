@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using Bogus;
 using ZiekenhuisDataGenerator.database;
 using ZiekenhuisDataGenerator.models;
 
@@ -8,7 +5,7 @@ Console.WriteLine("Hello World");
 
 DbRepository repo = new DbRepository();
 repo.GetAllReferenceTables();
-List<Patient> patients = repo.CreateRandomPatienten();
+List<Patient> patients = repo.CreateRandomPatienten(50);
 foreach (Patient patient in patients)
 {
     Console.WriteLine("Patient:");
@@ -25,7 +22,10 @@ foreach (Patient patient in patients)
     Console.WriteLine("- dieetclassificatie = {0}",patient.dieetclassificatie.Classificatie);
     Console.WriteLine("- voorgeschiedenis = {0}",patient.voorgeschiedenis);
 
-    patient.Meetwaarden = repo.GenerateMeetwaardenForPatient(patient);
+    Console.WriteLine("* Genereren meetwaarden");
+    patient.Meetwaarden = repo.GenerateMeetwaardenForPatient(patient, 50, 200);
 }
+Console.WriteLine("--------------------------- Opslaan -----------------");
 repo.SavePatientList(patients);
+Console.WriteLine("--------------------------- Gereed -----------------");
 
