@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Bogus;
-using Bogus.DataSets;
 using MySqlConnector;
 using ZiekenhuisDataGenerator.models;
 

@@ -1,11 +1,16 @@
+using System;
+using System.Collections.Generic;
 using ZiekenhuisDataGenerator.database;
 using ZiekenhuisDataGenerator.models;
 
-Console.WriteLine("Hello World");
-
 DbRepository repo = new DbRepository();
 repo.GetAllReferenceTables();
+
+/**
+ * Pas onderstaande regel aan om te zorgen dat het juiste aantal patienten aangemaakt wordt (nu 50 patienten)
+ */
 List<Patient> patients = repo.CreateRandomPatienten(50);
+
 foreach (Patient patient in patients)
 {
     Console.WriteLine("Patient:");
@@ -23,6 +28,10 @@ foreach (Patient patient in patients)
     Console.WriteLine("- voorgeschiedenis = {0}",patient.voorgeschiedenis);
 
     Console.WriteLine("* Genereren meetwaarden");
+    /**
+     * Pas onderstaande regel aan om meer of minder patient meetwaarden te genereren
+     * (getallen zijn minimum en maximum aantal meetwaarden per patient)
+     */
     patient.Meetwaarden = repo.GenerateMeetwaardenForPatient(patient, 50, 200);
 }
 Console.WriteLine("--------------------------- Opslaan -----------------");
